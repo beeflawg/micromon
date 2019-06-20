@@ -7,7 +7,7 @@ node {
     }
 
     stage("Permissions"){
-       stages{
+       
            stage("Admin Server Permission"){
                 /* change directory */
                 dir("AdminServer"){
@@ -22,7 +22,7 @@ node {
                 sh "chmod 711 ./mvnw"
                 }
            }
-       }
+       
     }
 
     stage("Test"){
