@@ -1,6 +1,6 @@
-node {
+pipeline {
     def app
-
+    stages{
     stage("Clone repository"){
         /* clone the repository*/
         checkout scm
@@ -48,5 +48,5 @@ node {
             }
         }
     }
-
+    }
 }
