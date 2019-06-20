@@ -7,7 +7,7 @@ node {
     }
 
     stage("Permissions"){
-       stages{
+       parallel{
            stage("AdminServer"){
                 /* change directory */
                 dir("AdminServer"){
