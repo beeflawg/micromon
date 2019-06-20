@@ -5,14 +5,24 @@ node {
         /* clone the repository*/
         checkout scm
     }
-    
+
     stage("Permissions"){
-       
-        /* change directory */
-        dir("AdminServer"){
-        /* set maven wrapper permission */
-        sh "chmod 711 ./mvnw"
-        }
+       stages{
+           stage("AdminServer"){
+                /* change directory */
+                dir("AdminServer"){
+                /* set maven wrapper permission */
+                sh "chmod 711 ./mvnw"
+                }
+           }
+           stage("DiscoveryServer"){
+                /* change directory */
+                dir("DiscoveryServer"){
+                /* set maven wrapper permission */
+                sh "chmod 711 ./mvnw"
+                }
+           }
+       }
     }
 
     stage("Test"){
