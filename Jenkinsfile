@@ -7,24 +7,24 @@ node {
     }
 
     stage("Permissions"){
-       stages{
+       steps{
            stage("AdminServer"){
-               steps{
+               
                     /* change directory */
                     dir("AdminServer"){
                     /* set maven wrapper permission */
                     sh "chmod 711 ./mvnw"
                     }
-               }
+               
            }
            stage("DiscoveryServer"){
-               steps{
+               
                     /* change directory */
                     dir("DiscoveryServer"){
                     /* set maven wrapper permission */
                     sh "chmod 711 ./mvnw"
                     }
-               }
+               
            }
        }
        
