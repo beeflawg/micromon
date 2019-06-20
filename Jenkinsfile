@@ -15,22 +15,34 @@ node {
     }
 
     stage("Test"){
+        /* change directory */
+        dir("AdminServer"){
         /* run test */
         sh "./mvnw test"
+        }
     }
 
     stage("Build Project"){
+        /* change directory */
+        dir("AdminServer"){
         /* build the project */
         sh "./mvnw clean install"
+        }
     }
 
     stage ("Build Image"){
+        /* change directory */
+        dir("AdminServer"){
         app = docker.build("beeflawg/admin-server")
+        }
     }
 
     stage ("Push Image"){
+        /* change directory */
+        dir("AdminServer"){
         /* push the image to docker hub */
         sh "echo TODO"
+        }
     }
 
 }
