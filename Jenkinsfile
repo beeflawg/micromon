@@ -10,7 +10,7 @@ node {
         /* change directory */
         sh "cd AdminServer"
         /* set maven wrapper permission */
-        sh "chmod 711 ./mvnw"
+        sh "cd AdminServer && chmod 711 ./mvnw"
     }
 
     stage("Test"){
