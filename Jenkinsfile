@@ -1,54 +1,51 @@
 node {
     def app
-    pipeline{
-        stages{
-            stage("Clone repository"){
-                /* clone the repository*/
-                checkout scm
-            }
 
-            stage("Permissions"){
-            
-                /* change directory */
-                dir("AdminServer"){
-                /* set maven wrapper permission */
-                sh "chmod 711 ./mvnw"
-                }
-            }
+    stage("Clone repository"){
+        /* clone the repository*/
+        checkout scm
+    }
 
-            stage("Test"){
-                /* change directory */
-                dir("AdminServer"){
-                /* run test */
-                sh "./mvnw test"
-                }
-            }
+    stage("Permissions"){
+        /* change directory */
+        dir("AdminServer"){
+        /* set maven wrapper permission */
+        sh "chmod 711 ./mvnw"
+        }
+    }
 
-            stage("Build Project"){
-                /* change directory */
-                dir("AdminServer"){
-                /* build the project */
-                sh "./mvnw clean install"
-                }
-            }
+    stage("Test"){
+        /* change directory */
+        dir("AdminServer"){
+        /* run test */
+        sh "./mvnw test"
+        }
+    }
 
-            stage ("Build Image"){
-                /* change directory */
-                dir("AdminServer"){
-                app = docker.build("beeflawg/admin-server")
-                }
-            }
+    stage("Build Project"){
+        /* change directory */
+        dir("AdminServer"){
+        /* build the project */
+        sh "./mvnw clean install"
+        }
+    }
 
-            stage ("Push Image"){
-                /* change directory */
-                dir("AdminServer"){
-                /* push the image to docker hub */
-                    docker.withRegistry("https://registry.hub.docker.com", "docker-hub-credentials"){
-                        app.push("${env.BUILD_NUMBER}")
-                        app.push("latest")
-                    }
-                }
+    stage ("Build Image"){
+        /* change directory */
+        dir("AdminServer"){
+        app = docker.build("beeflawg/admin-server")
+        }
+    }
+
+    stage ("Push Image"){
+        /* change directory */
+        dir("AdminServer"){
+        /* push the image to docker hub */
+            docker.withRegistry("https://registry.hub.docker.com", "docker-hub-credentials"){
+                app.push("${env.BUILD_NUMBER}")
+                app.push("latest")
             }
         }
     }
+
 }
