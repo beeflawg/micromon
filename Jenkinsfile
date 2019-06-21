@@ -54,9 +54,6 @@ pipeline {
     
             parallel{
                 stage("Admin Test"){
-                    agent{
-                        label 'Admin'
-                    }
                     steps{
                         /* change directory */
                         dir("AdminServer"){
@@ -66,9 +63,6 @@ pipeline {
                     }
                 }
                 stage("Discovery Test"){
-                    agent{
-                        label 'Discovery'
-                    }
                     steps{
                         /* change directory */
                         dir("DiscoveryServer"){
@@ -78,9 +72,6 @@ pipeline {
                     }
                 }
                 stage("Pokemon Test"){
-                    agent{
-                        label 'Pokemon'
-                    }
                     steps{
                         /* change directory */
                         dir("PokemonService"){
@@ -90,9 +81,6 @@ pipeline {
                     }
                 }
                 stage("Trainer Test"){
-                    agent{
-                        label 'Trainer'
-                    }
                     steps{
                         /* change directory */
                         dir("TrainerService"){
