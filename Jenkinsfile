@@ -51,7 +51,7 @@ pipeline {
         }
 
         stage("Test"){
-            stages{
+            parallel{
                 stage("Admin Test"){
                     steps{
                         /* change directory */
@@ -92,7 +92,7 @@ pipeline {
         }
 
         stage("Build Project"){
-            stages{
+            parallel{
                 stage("Build Admin"){
                     steps{
                         /* change directory */
@@ -133,7 +133,7 @@ pipeline {
         }
 
         stage ("Build Image"){
-            stages{
+            parallel{
                 stage("Build AS Image"){
                     steps{  
                         /* change directory */
@@ -178,14 +178,60 @@ pipeline {
         }
 
         stage ("Push Image"){
-            steps{
-                /* change directory */
-                dir("AdminServer"){
-                /* push the image to docker hub */
-                    script{
-                        docker.withRegistry("https://registry.hub.docker.com", "docker-hub-credentials"){
-                            app.push("${env.BUILD_NUMBER}")
-                            app.push("latest")
+            parallel{
+                stage("Push Admin Server"){
+                    steps{
+                        /* change directory */
+                        dir("AdminServer"){
+                        /* push the image to docker hub */
+                            script{
+                                docker.withRegistry("https://registry.hub.docker.com", "docker-hub-credentials"){
+                                    app.push("${env.BUILD_NUMBER}")
+                                    app.push("latest")
+                                }
+                            }
+                        }
+                    }
+                }
+                stage("Push Admin Server"){
+                    steps{
+                        /* change directory */
+                        dir("DiscoveryServer"){
+                        /* push the image to docker hub */
+                            script{
+                                docker.withRegistry("https://registry.hub.docker.com", "docker-hub-credentials"){
+                                    app2.push("${env.BUILD_NUMBER}")
+                                    app2.push("latest")
+                                }
+                            }
+                        }
+                    }
+                }
+                stage("Push Pokemon Service"){
+                    steps{
+                        /* change directory */
+                        dir("PokemonService"){
+                        /* push the image to docker hub */
+                            script{
+                                docker.withRegistry("https://registry.hub.docker.com", "docker-hub-credentials"){
+                                    app3.push("${env.BUILD_NUMBER}")
+                                    app3.push("latest")
+                                }
+                            }
+                        }
+                    }
+                }
+                stage("Push Trainer Service"){
+                    steps{
+                        /* change directory */
+                        dir("TrainerService"){
+                        /* push the image to docker hub */
+                            script{
+                                docker.withRegistry("https://registry.hub.docker.com", "docker-hub-credentials"){
+                                    app4.push("${env.BUILD_NUMBER}")
+                                    app4.push("latest")
+                                }
+                            }
                         }
                     }
                 }
