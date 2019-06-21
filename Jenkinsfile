@@ -51,13 +51,19 @@ pipeline {
         }
 
         stage("Test"){
+            agent {         
+                docker {            
+                    image 'maven:3-alpine'             
+                    args '-v /root/.m2:/root/.m2'         
+                }     
+            }
             parallel{
                 stage("Admin Test"){
                     steps{
                         /* change directory */
                         dir("AdminServer"){
                         /* run test */
-                        sh "./mvnw test"
+                        sh "./mvn test"
                         }
                     }
                 }
@@ -66,7 +72,7 @@ pipeline {
                         /* change directory */
                         dir("DiscoveryServer"){
                         /* run test */
-                        sh "./mvnw test"
+                        sh "./mvn test"
                         }
                     }
                 }
@@ -75,7 +81,7 @@ pipeline {
                         /* change directory */
                         dir("PokemonService"){
                         /* run test */
-                        sh "./mvnw test"
+                        sh "./mvn test"
                         }
                     }
                 }
@@ -84,7 +90,7 @@ pipeline {
                         /* change directory */
                         dir("TrainerService"){
                         /* run test */
-                        sh "./mvnw test"
+                        sh "./mvn test"
                         }
                     }
                 }
