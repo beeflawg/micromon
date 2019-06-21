@@ -9,9 +9,10 @@ void theProcess(folder,image){
         }
         stage("install"){
             dir(folder){
-                sh "./mvnw -T 1C install - DskipTests"
+                sh "./mvnw -T 1C install -DskipTests"
             }
         }
+
         stage("build"){
             dir(folder){
                 app = docker.build("beeflawg/"+image)
