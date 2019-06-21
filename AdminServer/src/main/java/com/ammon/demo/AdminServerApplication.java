@@ -1,4 +1,4 @@
-package com.cole.demo;
+package com.ammon.demo;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;

@@ -1,4 +1,4 @@
-package com.cole.demo;
+package com.ammon.demo;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -10,12 +10,13 @@ import org.springframework.web.client.RestTemplate;
 @EnableEurekaClient
 @SpringBootApplication
 public class TrainerServiceApplication {
-	
+
 	@LoadBalanced
 	@Bean
 	RestTemplate restTemplate() {
 		return new RestTemplate();
 	}
+	
 	
 	public static void main(String[] args) {
 		SpringApplication.run(TrainerServiceApplication.class, args);
