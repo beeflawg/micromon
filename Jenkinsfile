@@ -51,14 +51,15 @@ pipeline {
         }
 
         stage("Test"){
-            agent {         
+            
+            parallel{
+                stage("Admin Test"){
+                    agent {         
                 docker {            
                     image 'maven:3-alpine'             
                     args '-v /root/.m2:/root/.m2'         
                 }     
             }
-            parallel{
-                stage("Admin Test"){
                     steps{
                         /* change directory */
                         dir("AdminServer"){
@@ -68,6 +69,12 @@ pipeline {
                     }
                 }
                 stage("Discovery Test"){
+                    agent {         
+                docker {            
+                    image 'maven:3-alpine'             
+                    args '-v /root/.m2:/root/.m2'         
+                }     
+            }
                     steps{
                         /* change directory */
                         dir("DiscoveryServer"){
@@ -77,6 +84,12 @@ pipeline {
                     }
                 }
                 stage("Pokemon Test"){
+                    agent {         
+                docker {            
+                    image 'maven:3-alpine'             
+                    args '-v /root/.m2:/root/.m2'         
+                }     
+            }
                     steps{
                         /* change directory */
                         dir("PokemonService"){
@@ -86,6 +99,12 @@ pipeline {
                     }
                 }
                 stage("Trainer Test"){
+                    agent {         
+                docker {            
+                    image 'maven:3-alpine'             
+                    args '-v /root/.m2:/root/.m2'         
+                }     
+            }
                     steps{
                         /* change directory */
                         dir("TrainerService"){
