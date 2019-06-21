@@ -1,0 +1,22 @@
+version: '3'
+services:
+  admin-server:
+    container_name: admin-server
+    image: beeflawg/admin-server
+    ports:
+      - 9000:9000
+    networks:
+      - spring-cloud-network
+  discovery-server:
+    container_name: discovery-server
+    image: beeflawg/discovery-server
+    ports:
+      - 8761:8761
+    networks:
+      - spring-cloud-network
+    links:
+      - admin-server:admin-server
+networks:
+  spring-cloud-network:
+    driver: bridge
+  
