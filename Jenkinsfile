@@ -1,7 +1,5 @@
 pipeline {
     agent any
-    node{
-    def app
 
     stages{
         stage("Clone repository"){
@@ -55,10 +53,13 @@ pipeline {
         }
 
         stage ("Build Image"){
-            steps{
-                /* change directory */
-                dir("AdminServer"){
-                app = docker.build("beeflawg/admin-server")
+            node ("Build"){
+                def app
+                steps{
+                    /* change directory */
+                    dir("AdminServer"){
+                    app = docker.build("beeflawg/admin-server")
+                    }
                 }
             }
         }
@@ -75,6 +76,5 @@ pipeline {
                 }
             }
         }
-    }
     }
 }
