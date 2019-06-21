@@ -10,7 +10,19 @@ services:
     image: beeflawg/discovery-server
     ports:
       - 8761:8761
-    links:
-      - admin-server:admin-server
-
-  
+    depends_on:
+      - admin-server
+  pokemon-service:
+    container_name: pokemon-service
+    image: beeflawg/pokemon-service
+    ports:
+      - 8081:8080
+    depends_on:
+      - discovery-server
+  trainer-service:
+    container_name: trainer-service
+    image: beeflawg/trainer-service
+    ports:
+      - 8091:8080
+    depends_on:
+      - pokemon-service
