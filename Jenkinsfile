@@ -1,6 +1,6 @@
 pipeline {
     agent any
-
+    node{
     def app
 
     stages{
@@ -75,5 +75,6 @@ pipeline {
                 }
             }
         }
+    }
     }
 }
