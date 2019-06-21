@@ -193,7 +193,7 @@ pipeline {
                         }
                     }
                 }
-                stage("Push Admin Server"){
+                stage("Push Discovery Server"){
                     steps{
                         /* change directory */
                         dir("DiscoveryServer"){
