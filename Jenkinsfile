@@ -54,13 +54,12 @@ pipeline {
 
         stage ("Build Image"){
             steps{
-                node("Build"){
-                def app
+             
                 /* change directory */
                 dir("AdminServer"){
                 app = docker.build("beeflawg/admin-server")
                 }
-                }
+                
             }
         }
 
