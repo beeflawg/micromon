@@ -10,7 +10,7 @@ pipeline {
         }
 
         stage("Permissions"){
-            stages{
+            parallel{
                 stage("Admin Server"){
                     steps{
                         /* change directory */
@@ -29,39 +29,151 @@ pipeline {
                         }
                     }
                 }
+                stage("Pokemon Service"){
+                    steps{
+                        /* change directory */
+                        dir("PokemonService"){
+                        /* set maven wrapper permission */
+                        sh "chmod 711 ./mvnw"
+                        }
+                    }
+                }
+                stage("Trainer Service"){
+                    steps{
+                        /* change directory */
+                        dir("TrainerService"){
+                        /* set maven wrapper permission */
+                        sh "chmod 711 ./mvnw"
+                        }
+                    }
+                }
             }
         }
 
         stage("Test"){
-            steps{
-                /* change directory */
-                dir("AdminServer"){
-                /* run test */
-                sh "./mvnw test"
+            stages{
+                stage("Admin Test"){
+                    steps{
+                        /* change directory */
+                        dir("AdminServer"){
+                        /* run test */
+                        sh "./mvnw test"
+                        }
+                    }
+                }
+                stage("Discovery Test"){
+                    steps{
+                        /* change directory */
+                        dir("DiscoveryServer"){
+                        /* run test */
+                        sh "./mvnw test"
+                        }
+                    }
+                }
+                stage("Pokemon Test"){
+                    steps{
+                        /* change directory */
+                        dir("PokemonService"){
+                        /* run test */
+                        sh "./mvnw test"
+                        }
+                    }
+                }
+                stage("Trainer Test"){
+                    steps{
+                        /* change directory */
+                        dir("TrainerService"){
+                        /* run test */
+                        sh "./mvnw test"
+                        }
+                    }
                 }
             }
         }
 
         stage("Build Project"){
-            steps{
-                /* change directory */
-                dir("AdminServer"){
-                /* build the project */
-                sh "./mvnw clean install"
+            stages{
+                stage("Build Admin"){
+                    steps{
+                        /* change directory */
+                        dir("AdminServer"){
+                        /* build the project */
+                        sh "./mvnw clean install"
+                        }
+                    }
                 }
+                stage("Build Discovery"){
+                    steps{
+                        /* change directory */
+                        dir("DiscoveryServer"){
+                        /* build the project */
+                        sh "./mvnw clean install"
+                        }
+                    }
+                } 
+                stage("Build Pokemon"){
+                    steps{
+                        /* change directory */
+                        dir("PokemonService"){
+                        /* build the project */
+                        sh "./mvnw clean install"
+                        }
+                    }
+                } 
+                stage("Build Trainer"){
+                    steps{
+                        /* change directory */
+                        dir("TrainerService"){
+                        /* build the project */
+                        sh "./mvnw clean install"
+                        }
+                    }
+                }   
             }
         }
 
         stage ("Build Image"){
-            steps{
-             
-                /* change directory */
-                dir("AdminServer"){
-                    script{
-                        app = docker.build("beeflawg/admin-server")
+            stages{
+                stage("Build AS Image"){
+                    steps{  
+                        /* change directory */
+                        dir("AdminServer"){
+                            script{
+                                app = docker.build("beeflawg/admin-server")
+                            }
+                        }     
                     }
                 }
-                
+                stage("Build DS Image"){
+                    steps{  
+                        /* change directory */
+                        dir("DiscoveryServer"){
+                            script{
+                                app2 = docker.build("beeflawg/discovery-server")
+                            }
+                        }     
+                    }
+                }
+                stage("Build PS Image"){
+                    steps{  
+                        /* change directory */
+                        dir("PokemonService"){
+                            script{
+                                app3 = docker.build("beeflawg/pokemon-service")
+                            }
+                        }     
+                    }
+                }
+                stage("Build TS Image"){
+                    steps{  
+                        /* change directory */
+                        dir("TrainerService"){
+                            script{
+                                app4 = docker.build("beeflawg/trainer-service")
+                            }
+                        }     
+                    }
+                }
             }
         }
 
