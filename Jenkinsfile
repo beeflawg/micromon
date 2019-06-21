@@ -1,239 +1,56 @@
+// groovy language
+void theProcess(folder,image){
+    def app
+    script{
+        stage("permissions"){
+            dir(folder){
+                sh "chmod 711 ./mvnw"
+            }
+        }
+        stage("install"){
+            dir(folder){
+                sh "./mvnw -T 1C install - DskipTests"
+            }
+        }
+        stage("build"){
+            dir(folder){
+                app = docker.build("beeflawg/"+image)
+            }
+        }
+        stage("deploy"){
+            dir (folder){
+                docker.withRegistry("https://registry.hub.docker.com", "docker-hub-credentials"){
+                    app.push("${env.BUILD_NUMBER}")
+                    app.push("latest")
+                }
+            }
+        }
+    }
+}
+
 pipeline {
     agent any
-    
     stages{
-        stage("Clone repository"){
-            steps{
-                /* clone the repository*/
-                checkout scm
-            }
-        }
-
-        stage("Permissions"){
+        stage("automation"){
             parallel{
-                stage("Admin Server"){
+                stage("AdminServer"){
                     steps{
-                        /* change directory */
-                        dir("AdminServer"){
-                        /* set maven wrapper permission */
-                        sh "chmod 711 ./mvnw"
-                        }
+                        theProcess("AdminServer", "admin-server")
                     }
                 }
-                stage("Discovery Server"){
+                stage("DiscoveryServer"){
                     steps{
-                        /* change directory */
-                        dir("DiscoveryServer"){
-                        /* set maven wrapper permission */
-                        sh "chmod 711 ./mvnw"
-                        }
+                        theProcess("DiscoveryServer", "discovery-server")
                     }
                 }
-                stage("Pokemon Service"){
+                stage("PokemonService"){
                     steps{
-                        /* change directory */
-                        dir("PokemonService"){
-                        /* set maven wrapper permission */
-                        sh "chmod 711 ./mvnw"
-                        }
+                        theProcess("PokemonService", "pokemon-service")
                     }
                 }
-                stage("Trainer Service"){
+                stage("TrainerService"){
                     steps{
-                        /* change directory */
-                        dir("TrainerService"){
-                        /* set maven wrapper permission */
-                        sh "chmod 711 ./mvnw"
-                        }
-                    }
-                }
-            }
-        }
-
-        stage("Test"){
-    
-            stages{
-                stage("Admin Test"){
-                    steps{
-                        /* change directory */
-                        dir("AdminServer"){
-                        /* run test */
-                        sh "./mvnw test"
-                        }
-                    }
-                }
-                stage("Discovery Test"){
-                    steps{
-                        /* change directory */
-                        dir("DiscoveryServer"){
-                        /* run test */
-                        sh "./mvnw test"
-                        }
-                    }
-                }
-                stage("Pokemon Test"){
-                    steps{
-                        /* change directory */
-                        dir("PokemonService"){
-                        /* run test */
-                        sh "./mvnw test"
-                        }
-                    }
-                }
-                stage("Trainer Test"){
-                    steps{
-                        /* change directory */
-                        dir("TrainerService"){
-                        /* run test */
-                        sh "./mvnw test"
-                        }
-                    }
-                }
-            }
-        }
-
-        stage("Build Project"){
-            stages{
-                stage("Build Admin"){
-                    steps{
-                        /* change directory */
-                        dir("AdminServer"){
-                        /* build the project */
-                        sh "./mvnw clean install"
-                        }
-                    }
-                }
-                stage("Build Discovery"){
-                    steps{
-                        /* change directory */
-                        dir("DiscoveryServer"){
-                        /* build the project */
-                        sh "./mvnw clean install"
-                        }
-                    }
-                } 
-                stage("Build Pokemon"){
-                    steps{
-                        /* change directory */
-                        dir("PokemonService"){
-                        /* build the project */
-                        sh "./mvnw clean install"
-                        }
-                    }
-                } 
-                stage("Build Trainer"){
-                    steps{
-                        /* change directory */
-                        dir("TrainerService"){
-                        /* build the project */
-                        sh "./mvnw clean install"
-                        }
-                    }
-                }   
-            }
-        }
-
-        stage ("Build Image"){
-            stages{
-                stage("Build AS Image"){
-                    steps{  
-                        /* change directory */
-                        dir("AdminServer"){
-                            script{
-                                app = docker.build("beeflawg/admin-server")
-                            }
-                        }     
-                    }
-                }
-                stage("Build DS Image"){
-                    steps{  
-                        /* change directory */
-                        dir("DiscoveryServer"){
-                            script{
-                                app2 = docker.build("beeflawg/discovery-server")
-                            }
-                        }     
-                    }
-                }
-                stage("Build PS Image"){
-                    steps{  
-                        /* change directory */
-                        dir("PokemonService"){
-                            script{
-                                app3 = docker.build("beeflawg/pokemon-service")
-                            }
-                        }     
-                    }
-                }
-                stage("Build TS Image"){
-                    steps{  
-                        /* change directory */
-                        dir("TrainerService"){
-                            script{
-                                app4 = docker.build("beeflawg/trainer-service")
-                            }
-                        }     
-                    }
-                }
-            }
-        }
-
-        stage ("Push Image"){
-            stages{
-                stage("Push Admin Server"){
-                    steps{
-                        /* change directory */
-                        dir("AdminServer"){
-                        /* push the image to docker hub */
-                            script{
-                                docker.withRegistry("https://registry.hub.docker.com", "docker-hub-credentials"){
-                                    app.push("${env.BUILD_NUMBER}")
-                                    app.push("latest")
-                                }
-                            }
-                        }
-                    }
-                }
-                stage("Push Discovery Server"){
-                    steps{
-                        /* change directory */
-                        dir("DiscoveryServer"){
-                        /* push the image to docker hub */
-                            script{
-                                docker.withRegistry("https://registry.hub.docker.com", "docker-hub-credentials"){
-                                    app2.push("${env.BUILD_NUMBER}")
-                                    app2.push("latest")
-                                }
-                            }
-                        }
-                    }
-                }
-                stage("Push Pokemon Service"){
-                    steps{
-                        /* change directory */
-                        dir("PokemonService"){
-                        /* push the image to docker hub */
-                            script{
-                                docker.withRegistry("https://registry.hub.docker.com", "docker-hub-credentials"){
-                                    app3.push("${env.BUILD_NUMBER}")
-                                    app3.push("latest")
-                                }
-                            }
-                        }
-                    }
-                }
-                stage("Push Trainer Service"){
-                    steps{
-                        /* change directory */
-                        dir("TrainerService"){
-                        /* push the image to docker hub */
-                            script{
-                                docker.withRegistry("https://registry.hub.docker.com", "docker-hub-credentials"){
-                                    app4.push("${env.BUILD_NUMBER}")
-                                    app4.push("latest")
-                                }
-                            }
-                        }
+                        theProcess("TrainerService", "trainer-service")
                     }
                 }
             }
