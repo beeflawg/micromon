@@ -57,7 +57,9 @@ pipeline {
              
                 /* change directory */
                 dir("AdminServer"){
-                app = docker.build("beeflawg/admin-server")
+                    script{
+                        app = docker.build("beeflawg/admin-server")
+                    }
                 }
                 
             }
@@ -68,9 +70,11 @@ pipeline {
                 /* change directory */
                 dir("AdminServer"){
                 /* push the image to docker hub */
-                    docker.withRegistry("https://registry.hub.docker.com", "docker-hub-credentials"){
-                        app.push("${env.BUILD_NUMBER}")
-                        app.push("latest")
+                    script{
+                        docker.withRegistry("https://registry.hub.docker.com", "docker-hub-credentials"){
+                            app.push("${env.BUILD_NUMBER}")
+                            app.push("latest")
+                        }
                     }
                 }
             }
