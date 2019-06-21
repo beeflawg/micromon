@@ -52,7 +52,7 @@ pipeline {
 
         stage("Test"){
     
-            parallel{
+            stages{
                 stage("Admin Test"){
                     steps{
                         /* change directory */
@@ -93,7 +93,7 @@ pipeline {
         }
 
         stage("Build Project"){
-            parallel{
+            stages{
                 stage("Build Admin"){
                     steps{
                         /* change directory */
@@ -134,7 +134,7 @@ pipeline {
         }
 
         stage ("Build Image"){
-            parallel{
+            stages{
                 stage("Build AS Image"){
                     steps{  
                         /* change directory */
@@ -179,7 +179,7 @@ pipeline {
         }
 
         stage ("Push Image"){
-            parallel{
+            stages{
                 stage("Push Admin Server"){
                     steps{
                         /* change directory */
